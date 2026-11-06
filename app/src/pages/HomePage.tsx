@@ -8,7 +8,7 @@ import { api, type Lead, type Me } from '../api/client'
 
 const MODULES = [
   { label: 'Leads & follow-ups', perm: 'leads.view', path: '/leads' },
-  { label: 'Stock lookup', perm: 'stock.view', day: 3 },
+  { label: 'Stock lookup', perm: 'stock.view', path: '/stock' },
   { label: 'Approvals (OTP)', perm: 'requests.approve', day: 4 },
   { label: 'Dispatch & site receipt', perm: 'dispatch.manage', day: 4 },
   { label: 'Returns & damage photos', perm: 'dispatch.manage', day: 5 },

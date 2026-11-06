@@ -63,20 +63,39 @@ async function toError(r: Response): Promise<ApiError> {
   return new ApiError(r.status, msg, code)
 }
 
-export async function api<T>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
+async function request(path: string, init: RequestInit = {}, retry = true): Promise<Response> {
   const t = tokenStore.get()
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  const headers: Record<string, string> = {}
+  if (!(init.body instanceof FormData)) headers['Content-Type'] = 'application/json'
   if (t) headers.Authorization = `Bearer ${t.access_token}`
   const r = await fetch(`${BASE}${path}`, { ...init, headers: { ...headers, ...(init.headers as object) } })
   if (r.status === 401 && retry && t) {
     refreshing ??= refresh().finally(() => (refreshing = null))
-    if (await refreshing) return api<T>(path, init, false)
+    if (await refreshing) return request(path, init, false)
     window.dispatchEvent(new Event('cuplock:logout'))
   }
   if (!r.ok) throw await toError(r)
+  return r
+}
+
+export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const r = await request(path, init)
   if (r.status === 204) return undefined as T
   return r.json() as Promise<T>
 }
+
+/** Download a file from the API (with auth) and save it in the browser. */
+export async function download(path: string, filename: string) {
+  const blob = await (await request(path)).blob()
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
+export const upload = <T>(path: string, form: FormData) => api<T>(path, { method: 'POST', body: form })
 
 export const post = <T>(path: string, body?: unknown) =>
   api<T>(path, { method: 'POST', body: body === undefined ? undefined : JSON.stringify(body) })

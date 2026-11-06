@@ -77,6 +77,15 @@ cd api && pytest -q             # needs a `cuplock_test` Postgres database
 | 2 | Clients (GSTIN, credit profile), projects, sites | ✓ | |
 | 2 | Item master, rate cards (project > client > standard) | ✓ | |
 | 2 | Leads, follow-ups, convert lead to client | ✓ | ✓ |
+| 3 | Stock ledger by status and location, opening stock from Excel, transfers, status changes, write-offs, stock checks | ✓ | stock lookup |
+
+### Stock rules
+
+- Every change is a movement (OPN, TRS, TRR, STC, WOF, CHK) with signed ledger lines. The ledger is append-only (database trigger) and balances can never go negative.
+- Opening stock is loaded once per warehouse from the Excel template, with a preview before saving. After any other movement in that warehouse it is closed; use a stock check instead.
+- Transfers: sent stock is *in transit*. On receipt, good pieces become available and damaged pieces become damaged at the destination; any shortfall is marked *missing* at the sending warehouse.
+- Stock check counts available stock. Short pieces go to *missing*; extra pieces come back from *missing* first.
+- Write-offs (damaged or missing only), stock checks and opening stock need `stock.adjust` (owner, GM, branch manager).
 
 ## Roles
 

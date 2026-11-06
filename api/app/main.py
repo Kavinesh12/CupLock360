@@ -10,6 +10,7 @@ from app.modules.crm.router import router as crm_router
 from app.modules.items.router import router as items_router
 from app.modules.masters.router import router as masters_router
 from app.modules.org.router import router as org_router
+from app.modules.stock.router import router as stock_router
 from app.modules.users.router import router as users_router
 
 settings = get_settings()
@@ -38,6 +39,7 @@ app.include_router(audit_router, prefix=API)
 app.include_router(masters_router, prefix=API)
 app.include_router(items_router, prefix=API)
 app.include_router(crm_router, prefix=API)
+app.include_router(stock_router, prefix=API)
 
 
 if settings.env == "dev":

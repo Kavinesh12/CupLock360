@@ -192,3 +192,84 @@ export interface Lead {
 }
 
 export interface LeadDetail extends Lead { follow_ups: FollowUp[] }
+
+export interface StockWarehouse {
+  id: number
+  code: string
+  name: string
+  branch_id: number
+  mine: boolean
+}
+
+export interface StockMeta {
+  statuses: string[]
+  transitions: { from: string; to: string; label: string }[]
+  write_off_from: string[]
+}
+
+export type StockSummaryRow = {
+  item_id: number
+  item_code: string
+  item_name: string
+  category: string
+  total: number
+} & Record<string, number | string>
+
+export interface StockLocationRow {
+  location_type: 'warehouse' | 'site' | 'transit'
+  location_id: number
+  location_name: string
+  item_id: number
+  item_code: string
+  item_name: string
+  status: string
+  qty: number
+}
+
+export interface StockMovement {
+  id: number
+  ref_no: string
+  kind: string
+  warehouse_id: number | null
+  reason: string | null
+  note: string | null
+  source_type: string | null
+  source_id: number | null
+  created_by: number
+  created_at: string
+  entries: { location_type: string; location_id: number; item_id: number; status: string; qty: number }[]
+}
+
+export interface StockTransfer {
+  id: number
+  ref_no: string
+  from_warehouse_id: number
+  to_warehouse_id: number
+  status: 'in_transit' | 'received'
+  vehicle_no: string | null
+  note: string | null
+  sent_by: number
+  sent_at: string
+  received_by: number | null
+  received_at: string | null
+  lines: { item_id: number; qty_sent: number; qty_received: number | null; qty_damaged: number | null; qty_missing: number | null }[]
+}
+
+export interface StockCheck {
+  id: number
+  ref_no: string
+  warehouse_id: number
+  note: string | null
+  counted_by: number
+  counted_at: string
+  lines: { item_id: number; system_qty: number; counted_qty: number; variance: number }[]
+}
+
+export interface OpeningPreview {
+  ok: boolean
+  committed: boolean
+  errors: string[]
+  rows: { row: number; warehouse_code: string; item_code: string; item_name?: string; errors: string[]; qty: Record<string, number> }[]
+  totals?: Record<string, number>
+  movements?: string[]
+}

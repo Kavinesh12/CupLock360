@@ -12,6 +12,15 @@ from app.models.identity import (
 )
 from app.models.masters import Client, Item, Project, RateCard, RateCardLine, Site
 from app.models.org import Branch, Warehouse
+from app.models.stock import (
+    StockBalance,
+    StockCheck,
+    StockCheckLine,
+    StockEntry,
+    StockMovement,
+    Transfer,
+    TransferLine,
+)
 
 __all__ = [
     "AuditLog",
@@ -24,6 +33,13 @@ __all__ = [
     "RateCard",
     "RateCardLine",
     "Site",
+    "StockBalance",
+    "StockCheck",
+    "StockCheckLine",
+    "StockEntry",
+    "StockMovement",
+    "Transfer",
+    "TransferLine",
     "OtpChallenge",
     "Permission",
     "RefreshToken",
