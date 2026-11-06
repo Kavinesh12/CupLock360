@@ -78,8 +78,17 @@ cd api && pytest -q             # needs a `cuplock_test` Postgres database
 | 2 | Item master, rate cards (project > client > standard) | ✓ | |
 | 2 | Leads, follow-ups, convert lead to client | ✓ | ✓ |
 | 3 | Stock ledger by status and location, opening stock from Excel, transfers, status changes, write-offs, stock checks | ✓ | stock lookup |
+| 4 | Material requests with live stock check and estimate (rent, transport, GST), OTP approval, reservation, dispatch with delivery challan PDF, site receipt | ✓ | approvals with OTP, site receipt |
 
-### Stock rules
+### Request to dispatch rules
+
+- A request is priced from the rate card (project, then client, then standard) for at least the card's minimum days, plus transport and GST (CGST+SGST inside Tamil Nadu, IGST outside).
+- Approval needs `requests.approve`, a value within the approver's limit (owner unlimited; other approvers need a limit set on their user), and a 6-digit OTP. The OTP is bound to the request version and the exact approved quantities, so any change needs a new OTP. Nobody but the owner can approve their own request, and a client on credit hold cannot be approved.
+- Partial approval is allowed. Approved stock is reserved at the warehouse straight away.
+- Amending a request (until the first dispatch) releases the reservation and sends it back for approval. Cancel releases it too.
+- Dispatch confirms the quantities actually loaded (partial trips allowed) and creates a challan numbered `DC/<branch>/<FY>/<n>`. Stock moves from reserved to on the way.
+- Site receipt (site manager, sales or dispatch) moves received pieces to the site. Any shortfall is marked missing at the dispatching warehouse. Closing a part-dispatched request releases what is left.
+
 
 - Every change is a movement (OPN, TRS, TRR, STC, WOF, CHK) with signed ledger lines. The ledger is append-only (database trigger) and balances can never go negative.
 - Opening stock is loaded once per warehouse from the Excel template, with a preview before saving. After any other movement in that warehouse it is closed; use a stock check instead.

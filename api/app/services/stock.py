@@ -19,6 +19,10 @@ REF_PREFIX = {
     "status_change": "STC",
     "write_off": "WOF",
     "stock_check": "CHK",
+    "reserve": "RSV",
+    "release": "RLS",
+    "dispatch": "DSP",
+    "site_receipt": "RCP",
 }
 
 # Allowed status changes inside one warehouse (deck slide 7).

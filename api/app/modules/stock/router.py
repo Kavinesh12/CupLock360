@@ -8,8 +8,9 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.db import get_db
-from app.core.deps import client_ip, in_scope, require, scope_ids
+from app.core.deps import client_ip, get_current_user, in_scope, require, scope_ids
 from app.models import (
+    Dispatch,
     Item,
     Site,
     StockBalance,
@@ -205,8 +206,10 @@ def meta(_: User = Depends(require("stock.view"))):
 
 
 @router.get("/warehouses")
-def stock_warehouses(db: Session = Depends(get_db), user: User = Depends(require("stock.view"))):
-    """All active warehouses (transfer destinations); `mine` marks those the user can work in."""
+def stock_warehouses(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """All active warehouses (transfer destinations, request sources); `mine` marks those the user can work in."""
+    if not user.permission_codes & {"stock.view", "requests.create", "requests.view"}:
+        raise HTTPException(403, "Missing permission: stock.view")
     mine = set(_visible_warehouse_ids(db, user))
     whs = db.scalars(select(Warehouse).where(Warehouse.is_active).order_by(Warehouse.code))
     return [{"id": w.id, "code": w.code, "name": w.name, "branch_id": w.branch_id, "mine": w.id in mine} for w in whs]
@@ -227,7 +230,7 @@ def summary(
     for item_id, status, q in rows:
         out.setdefault(item_id, {s: 0 for s in STATUSES})[status] += int(q)
     if not warehouse_id:
-        for loc in ("transit", "site"):
+        for loc in ("transit", "challan", "site"):
             for item_id, status, q in db.execute(
                 select(StockBalance.item_id, StockBalance.status, func.sum(StockBalance.qty))
                 .where(StockBalance.location_type == loc)
@@ -281,6 +284,9 @@ def by_location(
         elif b.location_type == "site":
             s = sites.get(b.location_id)
             name = f"{s.code} · {s.name}" if s else f"Site {b.location_id}"
+        elif b.location_type == "challan":
+            d = db.get(Dispatch, b.location_id)
+            name = f"On the way {d.challan_no}" if d else f"Challan {b.location_id}"
         else:
             t = transfers.get(b.location_id)
             name = f"In transit {t.ref_no}" if t else f"Transit {b.location_id}"

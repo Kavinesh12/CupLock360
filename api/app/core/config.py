@@ -25,6 +25,12 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:8100", "capacitor://localhost", "http://localhost"]
 
+    # Company (GST: same state -> CGST+SGST, else IGST)
+    company_name: str = "CUPLOCK 360 Rentals"
+    company_gstin: str = ""
+    company_state_code: str = "33"
+    gst_rate: str = "18"  # percent, SAC 997319 rental of machinery/equipment
+
     # Bootstrap owner account created by `python -m app.seed`
     owner_username: str = "owner"
     owner_password: str = "Owner@12345"

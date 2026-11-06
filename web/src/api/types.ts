@@ -273,3 +273,96 @@ export interface OpeningPreview {
   totals?: Record<string, number>
   movements?: string[]
 }
+
+export interface DispatchRow {
+  id: number
+  challan_no: string
+  request_id: number
+  request_ref: string
+  warehouse_id: number
+  site_id: number
+  site_name: string
+  status: 'in_transit' | 'received'
+  vehicle_no: string | null
+  driver_name: string | null
+  driver_phone: string | null
+  note: string | null
+  dispatched_by: number
+  dispatched_at: string
+  received_by: number | null
+  received_at: string | null
+  receiver_name: string | null
+  receipt_note: string | null
+  lines: { item_id: number; qty: number; qty_received: number | null; qty_short: number | null }[]
+}
+
+export interface MaterialRequest {
+  id: number
+  ref_no: string
+  client_id: number
+  project_id: number
+  site_id: number
+  branch_id: number
+  warehouse_id: number
+  status: 'submitted' | 'approved' | 'rejected' | 'cancelled' | 'part_dispatched' | 'dispatched' | 'closed'
+  version: number
+  required_on: string
+  duration_days: number
+  transport_charge: string
+  est_rent: string
+  est_taxable: string
+  est_gst: string
+  est_total: string
+  note: string | null
+  created_by: number
+  created_at: string
+  approved_by: number | null
+  approved_at: string | null
+  decision_note: string | null
+  client_name: string
+  site_name: string
+  warehouse_code: string
+  lines: { item_id: number; qty_requested: number; qty_approved: number | null; qty_dispatched: number; rate_per_day: string }[]
+  dispatches: DispatchRow[]
+}
+
+export interface AvailabilityRow {
+  item_id: number
+  need: number
+  available: number | null
+  short: number | null
+  elsewhere: { warehouse_id: number; code: string; available: number }[]
+}
+
+export interface RequestDetail extends MaterialRequest {
+  availability: AvailabilityRow[]
+  client: { id: number; code: string; name: string; credit_status: string }
+  can_approve: boolean
+  my_approval_limit: string | null
+}
+
+export interface RequestEstimate {
+  lines: { item_id: number; qty: number; rate_per_day: string; days: number; amount: string }[]
+  rent: string
+  transport: string
+  taxable: string
+  cgst: string
+  sgst: string
+  igst: string
+  gst: string
+  total: string
+  missing_rates: number[]
+  availability: AvailabilityRow[]
+  client: { id: number; name: string; credit_status: string }
+}
+
+export interface SiteRow {
+  id: number
+  code: string
+  name: string
+  project_id: number
+  project_name: string
+  client_id: number
+  client_name: string
+  state_code: string
+}

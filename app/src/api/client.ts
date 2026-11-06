@@ -83,3 +83,29 @@ export interface Branch { id: number; code: string; name: string }
 
 export const fmt = (v: string | null) =>
   v ? new Date(v).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''
+
+/** Test mode only (console OTP delivery): read the latest OTP from the dev outbox. */
+export const devOtp = async (): Promise<string | null> => {
+  try { return (await fetch(`${BASE}/dev/otp-outbox`).then((r) => r.json()))[0]?.code ?? null } catch { return null }
+}
+
+export interface ReqLine { item_id: number; qty_requested: number; qty_approved: number | null; qty_dispatched: number; rate_per_day: string }
+export interface DispatchRow {
+  id: number; challan_no: string; request_id: number; request_ref: string; site_id: number; site_name: string
+  status: 'in_transit' | 'received'; vehicle_no: string | null; driver_name: string | null; dispatched_at: string
+  lines: { item_id: number; qty: number; qty_received: number | null; qty_short: number | null }[]
+}
+export interface MatRequest {
+  id: number; ref_no: string; status: string; client_name: string; site_name: string; warehouse_code: string
+  required_on: string; duration_days: number; est_total: string; est_gst: string; created_at: string; version: number
+  lines: ReqLine[]; dispatches: DispatchRow[]
+}
+export interface MatRequestDetail extends MatRequest {
+  availability: { item_id: number; need: number; available: number | null; short: number | null }[]
+  client: { credit_status: string }
+  can_approve: boolean
+  my_approval_limit: string | null
+}
+export interface ItemLite { id: number; code: string; name: string }
+export const inr = (v: string | number | null | undefined) =>
+  v == null || v === '' ? '' : `₹${Number(v).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`

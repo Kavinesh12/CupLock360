@@ -12,6 +12,7 @@ from app.models.identity import (
 )
 from app.models.masters import Client, Item, Project, RateCard, RateCardLine, Site
 from app.models.org import Branch, Warehouse
+from app.models.requests import Dispatch, DispatchLine, MaterialRequest, RequestLine
 from app.models.stock import (
     StockBalance,
     StockCheck,
@@ -26,6 +27,10 @@ __all__ = [
     "AuditLog",
     "Branch",
     "Client",
+    "Dispatch",
+    "DispatchLine",
+    "MaterialRequest",
+    "RequestLine",
     "FollowUp",
     "Item",
     "Lead",

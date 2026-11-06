@@ -95,6 +95,15 @@ export async function download(path: string, filename: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
+/** Open an API file (e.g. a PDF) in a new tab, with auth. */
+export async function openFile(path: string) {
+  const win = window.open('', '_blank')
+  const blob = await (await request(path)).blob()
+  const url = URL.createObjectURL(blob)
+  if (win) win.location.href = url
+  else window.location.href = url
+}
+
 export const upload = <T>(path: string, form: FormData) => api<T>(path, { method: 'POST', body: form })
 
 export const post = <T>(path: string, body?: unknown) =>

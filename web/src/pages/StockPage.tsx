@@ -23,6 +23,7 @@ const STATUS_COLOR: Record<string, string> = {
 const KIND_LABEL: Record<string, string> = {
   opening: 'Opening stock', transfer_send: 'Transfer sent', transfer_receive: 'Transfer received',
   status_change: 'Status change', write_off: 'Write-off', stock_check: 'Stock check',
+  reserve: 'Reserved for request', release: 'Reservation released', dispatch: 'Dispatched', site_receipt: 'Site receipt',
 }
 
 function useStockWarehouses() {

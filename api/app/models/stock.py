@@ -30,7 +30,7 @@ STATUSES = (
     "damaged",
     "missing",
 )
-LOCATION_TYPES = ("warehouse", "site", "transit")
+LOCATION_TYPES = ("warehouse", "site", "transit", "challan")  # transit = transfer id, challan = dispatch id
 
 
 class StockMovement(Base):
