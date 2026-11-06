@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cuplock
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cuplock}
+      POSTGRES_DB: cuplock
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cuplock"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./api
+    env_file:
+      - path: ./api/.env
+        required: false
+    environment:
+      CUPLOCK_DATABASE_URL: postgresql+psycopg://cuplock:${POSTGRES_PASSWORD:-cuplock}@db:5432/cuplock
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

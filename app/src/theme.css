@@ -1,0 +1,9 @@
+:root {
+  --ion-color-primary: #c2410c;
+  --ion-color-primary-rgb: 194, 65, 12;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #ab390b;
+  --ion-color-primary-tint: #c85424;
+}
+.login-wrap { max-width: 420px; margin: 0 auto; padding-top: 10vh; }
+.brand { font-size: 28px; font-weight: 800; margin: 0 0 4px; }
