@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { IonApp, IonLoading, setupIonicReact } from '@ionic/react'
+import { Redirect, Route } from 'react-router-dom'
+import { IonApp, IonLoading, IonRouterOutlet, setupIonicReact } from '@ionic/react'
+import { IonReactRouter } from '@ionic/react-router'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
 import '@ionic/react/css/structure.css'
@@ -10,6 +12,9 @@ import './theme.css'
 import { api, post, tokens, type Me } from './api/client'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
+import LeadsPage from './pages/LeadsPage'
+import LeadNewPage from './pages/LeadNewPage'
+import LeadDetailPage from './pages/LeadDetailPage'
 
 setupIonicReact({ mode: 'md' })
 
@@ -31,9 +36,19 @@ export default function App() {
     setMe(null)
   }
 
+  if (loading) return <IonApp><IonLoading isOpen /></IonApp>
+  if (!me) return <IonApp><LoginPage onLoggedIn={loadMe} /></IonApp>
   return (
     <IonApp>
-      {loading ? <IonLoading isOpen /> : me ? <HomePage me={me} onLogout={logout} /> : <LoginPage onLoggedIn={loadMe} />}
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/home"><HomePage me={me} onLogout={logout} /></Route>
+          <Route exact path="/leads"><LeadsPage me={me} /></Route>
+          <Route exact path="/leads/new"><LeadNewPage /></Route>
+          <Route exact path="/leads/:id(\d+)"><LeadDetailPage me={me} /></Route>
+          <Route exact path="/"><Redirect to="/home" /></Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
     </IonApp>
   )
 }

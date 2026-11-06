@@ -62,3 +62,24 @@ export async function api<T>(path: string, init: RequestInit = {}, retry = true)
 }
 
 export const post = <T>(path: string, body: unknown) => api<T>(path, { method: 'POST', body: JSON.stringify(body) })
+
+export type LeadStatus = 'new' | 'contacted' | 'quoted' | 'won' | 'lost'
+
+export interface Lead {
+  id: number
+  company_name: string
+  contact_name: string | null
+  phone: string | null
+  city: string | null
+  requirement: string | null
+  status: LeadStatus
+  next_follow_up_at: string | null
+  branch_id: number
+}
+
+export interface FollowUp { id: number; at: string; channel: string; note: string; next_follow_up_at: string | null }
+export interface LeadDetail extends Lead { follow_ups: FollowUp[]; lost_reason: string | null }
+export interface Branch { id: number; code: string; name: string }
+
+export const fmt = (v: string | null) =>
+  v ? new Date(v).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''

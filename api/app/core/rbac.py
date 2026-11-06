@@ -20,6 +20,8 @@ PERMISSIONS: dict[str, tuple[str, str]] = {
     "items.manage": ("masters", "Edit item master and rate cards"),
     "leads.view": ("crm", "View leads and follow-ups"),
     "leads.manage": ("crm", "Create and update leads and follow-ups"),
+    "leads.view_all": ("crm", "See every lead in scope, not only own or assigned leads"),
+    "clients.credit": ("masters", "Set credit limit, deposit, payment terms and credit status"),
     "stock.view": ("stock", "View stock by warehouse and site"),
     "stock.move": ("stock", "Post stock movements, transfers and stock checks"),
     "requests.view": ("operations", "View material requests"),
@@ -51,7 +53,7 @@ ROLES: dict[str, tuple[str, str, set[str]]] = {
         "Branch Manager",
         "Runs one or more branches (scoped)",
         _MASTERS_VIEW
-        | {"clients.manage", "leads.view", "leads.manage", "stock.view", "requests.view",
+        | {"clients.manage", "leads.view", "leads.manage", "leads.view_all", "stock.view", "requests.view",
            "requests.create", "requests.approve", "billing.view", "reports.view"},
     ),
     "sales": (
@@ -79,7 +81,7 @@ ROLES: dict[str, tuple[str, str, set[str]]] = {
     "accounts_manager": (
         "Accounts Manager",
         "Billing, receivables and the books",
-        _MASTERS_VIEW | {"requests.view", "billing.view", "billing.manage", "finance.view",
+        _MASTERS_VIEW | {"clients.credit", "requests.view", "billing.view", "billing.manage", "finance.view",
                          "finance.manage", "reports.view", "audit.view", "dashboard.view"},
     ),
     "accounts_executive": (
@@ -90,7 +92,7 @@ ROLES: dict[str, tuple[str, str, set[str]]] = {
     "auditor": (
         "Auditor (read-only)",
         "Reads everything relevant to audit; changes nothing",
-        {c for c in _ALL if c.endswith(".view")} - {"users.view"} | {"audit.view"},
+        {c for c in _ALL if c.endswith(".view")} - {"users.view"} | {"audit.view", "leads.view_all"},
     ),
     "client_portal": ("Client Portal User", "A client's own requests and statements", {"portal.self"}),
     "sysadmin": ("System Administrator", "Users, roles and settings; no business data", _ADMIN | {"audit.view"}),

@@ -89,8 +89,8 @@ export default function UsersPage() {
           }] : []),
         ]} />
       <Modal open={!!editing} title={editing === 'new' ? 'Add user' : 'Edit user'} onCancel={() => setEditing(null)}
-        onOk={() => form.submit()} confirmLoading={save.isPending} destroyOnClose>
-        <Form form={form} layout="vertical" onFinish={(v) => save.mutate(v)}>
+        onOk={() => form.submit()} confirmLoading={save.isPending} forceRender>
+        <Form form={form} name="form_userspage" layout="vertical" onFinish={(v) => save.mutate(v)}>
           <Form.Item name="username" label="Username" rules={[{ required: true, min: 3, pattern: /^[a-zA-Z0-9._-]+$/ }]}>
             <Input disabled={editing !== 'new'} />
           </Form.Item>

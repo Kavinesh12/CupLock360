@@ -16,8 +16,10 @@ from app.services import audit
 
 def seed(db: Session) -> None:
     perms = {p.code: p for p in db.scalars(select(Permission))}
+    new_codes: set[str] = set()
     for code, (module, desc) in PERMISSIONS.items():
         if code not in perms:
+            new_codes.add(code)
             perms[code] = Permission(code=code, module=module, description=desc)
             db.add(perms[code])
         else:
@@ -34,6 +36,11 @@ def seed(db: Session) -> None:
             roles[code] = role
         elif code == "owner":
             role.permissions = [perms[c] for c in sorted(codes)]  # owner always gets new permissions
+        else:
+            # Permissions added in a later release go to the system roles that should have them,
+            # without undoing edits made on the Roles screen.
+            have = {p.code for p in role.permissions}
+            role.permissions = role.permissions + [perms[c] for c in sorted((codes & new_codes) - have)]
     db.flush()
 
     s = get_settings()

@@ -72,3 +72,12 @@ def test_duplicate_username_conflict(client):
     r = client.post(f"{API}/users", json={"username": "dup", "full_name": "D", "password": "Passw0rd!x",
                                           "roles": ["sales"]}, headers=auth(owner))
     assert r.status_code == 409
+
+
+def test_user_lookup_available_to_any_role(client):
+    owner = login(client)
+    make_user(client, owner, "store1", ["storekeeper"])
+    sk = login(client, "store1", "Passw0rd!x")
+    rows = client.get(f"{API}/users/lookup", headers=auth(sk)).json()
+    assert {"id", "full_name"} == set(rows[0])
+    assert len(rows) == 2

@@ -49,11 +49,11 @@ export default function LoginPage() {
               Resend OTP
             </Button>
             <Button type="text" block onClick={() => { setChallenge(null); setError(null); setDevOtp(null) }}>Back</Button>
-            {import.meta.env.DEV && challenge.channel === 'console' && (
+            {challenge.channel === 'console' && (
               <Button type="dashed" block onClick={async () => {
                 const box = await fetch('/api/v1/dev/otp-outbox').then((r) => r.json())
                 setDevOtp(box[0]?.code ?? 'none yet')
-              }}>Dev: show OTP</Button>
+              }}>Show OTP (test mode)</Button>
             )}
           </Form>
         )}
