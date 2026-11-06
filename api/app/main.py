@@ -6,6 +6,9 @@ from app.core.config import get_settings
 from app.core.db import engine
 from app.modules.audit.router import router as audit_router
 from app.modules.auth.router import router as auth_router
+from app.modules.crm.router import router as crm_router
+from app.modules.items.router import router as items_router
+from app.modules.masters.router import router as masters_router
 from app.modules.org.router import router as org_router
 from app.modules.users.router import router as users_router
 
@@ -32,6 +35,9 @@ app.include_router(auth_router, prefix=API)
 app.include_router(users_router, prefix=API)
 app.include_router(org_router, prefix=API)
 app.include_router(audit_router, prefix=API)
+app.include_router(masters_router, prefix=API)
+app.include_router(items_router, prefix=API)
+app.include_router(crm_router, prefix=API)
 
 
 if settings.env == "dev":

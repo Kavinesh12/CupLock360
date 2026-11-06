@@ -42,8 +42,8 @@ export default function BranchesPage() {
             { title: 'Branch', dataIndex: 'branch_id', render: (id: number) => branches.data?.find((b) => b.id === id)?.name }]} />
       </Card>
       <Modal open={!!modal} title={modal === 'branch' ? 'Add branch' : 'Add warehouse'} onCancel={() => setModal(null)}
-        onOk={() => form.submit()} confirmLoading={save.isPending} destroyOnClose>
-        <Form form={form} layout="vertical" onFinish={(v) => save.mutate(v)}>
+        onOk={() => form.submit()} confirmLoading={save.isPending} forceRender>
+        <Form form={form} name="form_branchespage" layout="vertical" onFinish={(v) => save.mutate(v)}>
           {modal === 'warehouse' && (
             <Form.Item name="branch_id" label="Branch" rules={[{ required: true }]}>
               <Select options={branches.data?.map((b) => ({ value: b.id, label: b.name }))} />

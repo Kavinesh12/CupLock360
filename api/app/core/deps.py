@@ -48,3 +48,18 @@ def require(*codes: str) -> Callable[..., User]:
         return user
 
     return checker
+
+
+def scope_ids(user: User, scope_type: str) -> set[int] | None:
+    """IDs the user is limited to for a scope type, or None when unrestricted."""
+    ids = {s.scope_id for s in user.scopes if s.scope_type == scope_type}
+    return ids or None
+
+
+def in_scope(user: User, *, branch_id: int | None = None, client_id: int | None = None,
+             site_id: int | None = None) -> bool:
+    for kind, value in (("branch", branch_id), ("client", client_id), ("site", site_id)):
+        allowed = scope_ids(user, kind)
+        if allowed is not None and value is not None and value not in allowed:
+            return False
+    return True

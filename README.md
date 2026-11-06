@@ -69,6 +69,15 @@ cd api && pytest -q             # needs a `cuplock_test` Postgres database
 - Deactivating a user, changing their roles, scopes or password signs them out everywhere immediately.
 - Audit log is append-only (database trigger) and hash-chained; `GET /api/v1/audit/verify` detects tampering.
 
+## Modules so far
+
+| Day | Module | Web | Android |
+| --- | --- | --- | --- |
+| 1 | Login with OTP, users, roles, branches, audit trail | ✓ | login |
+| 2 | Clients (GSTIN, credit profile), projects, sites | ✓ | |
+| 2 | Item master, rate cards (project > client > standard) | ✓ | |
+| 2 | Leads, follow-ups, convert lead to client | ✓ | ✓ |
+
 ## Roles
 
 The 12 roles from the client deck are seeded: Business Owner, General Manager, Branch Manager, Sales / CRM

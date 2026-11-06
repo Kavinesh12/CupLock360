@@ -79,3 +79,116 @@ export interface AuditRow {
   data: Record<string, unknown> | null
   ip: string | null
 }
+
+export type CreditStatus = 'pending' | 'approved' | 'hold'
+
+export interface Client {
+  id: number
+  code: string
+  name: string
+  branch_id: number
+  gstin: string | null
+  pan: string | null
+  billing_address: string | null
+  state: string
+  state_code: string
+  contact_name: string | null
+  phone: string | null
+  email: string | null
+  notes: string | null
+  is_active: boolean
+  payment_terms_days: number
+  credit_limit: string
+  security_deposit: string
+  credit_status: CreditStatus
+}
+
+export interface Site {
+  id: number
+  project_id: number
+  code: string
+  name: string
+  address: string | null
+  city: string | null
+  state: string
+  state_code: string
+  manager_user_id: number | null
+  contact_phone: string | null
+  is_active: boolean
+}
+
+export interface Project {
+  id: number
+  client_id: number
+  code: string
+  name: string
+  branch_id: number
+  start_date: string | null
+  is_active: boolean
+  sites: Site[]
+}
+
+export interface ClientDetail extends Client { projects: Project[] }
+
+export type ItemCategory = 'standard' | 'ledger' | 'transom' | 'jack' | 'plank' | 'brace' | 'accessory' | 'other'
+
+export interface Item {
+  id: number
+  code: string
+  name: string
+  category: ItemCategory
+  size_m: string | null
+  unit: string
+  weight_kg: string | null
+  hsn_sac: string | null
+  replacement_cost: string
+  is_active: boolean
+}
+
+export interface RateLine { item_id: number; rate_per_day: string; rate_per_month: string | null }
+
+export interface RateCard {
+  id: number
+  name: string
+  client_id: number | null
+  project_id: number | null
+  valid_from: string
+  valid_to: string | null
+  min_days: number
+  grace_days: number
+  is_active: boolean
+  lines: RateLine[]
+}
+
+export type LeadStatus = 'new' | 'contacted' | 'quoted' | 'won' | 'lost'
+
+export interface FollowUp {
+  id: number
+  at: string
+  by_user_id: number
+  channel: string
+  note: string
+  next_follow_up_at: string | null
+}
+
+export interface Lead {
+  id: number
+  company_name: string
+  contact_name: string | null
+  phone: string | null
+  email: string | null
+  city: string | null
+  source: string | null
+  requirement: string | null
+  est_value: string | null
+  status: LeadStatus
+  lost_reason: string | null
+  branch_id: number
+  assigned_to: number | null
+  created_by: number
+  next_follow_up_at: string | null
+  converted_client_id: number | null
+  created_at: string
+}
+
+export interface LeadDetail extends Lead { follow_ups: FollowUp[] }

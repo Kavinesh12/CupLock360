@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.db import get_db
-from app.core.deps import client_ip, require
+from app.core.deps import client_ip, get_current_user, require
 from app.core.security import hash_password
 from app.models import Permission, Role, User, UserScope, user_roles
 from app.modules.auth.service import revoke_all_sessions
@@ -55,6 +55,13 @@ def list_users(q: str | None = None, db: Session = Depends(get_db), _: User = De
         like = f"%{q.lower()}%"
         stmt = stmt.where(func.lower(User.full_name).like(like) | User.username.like(like) | User.phone.like(like))
     return [_out(u) for u in db.scalars(stmt)]
+
+
+@router.get("/users/lookup")
+def lookup_users(db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> list[dict]:
+    """Names of active users, for pickers (assign a lead, choose a site manager). No contact details."""
+    rows = db.execute(select(User.id, User.full_name).where(User.is_active).order_by(User.full_name))
+    return [{"id": i, "full_name": n} for i, n in rows]
 
 
 @router.get("/users/{user_id}", response_model=UserOut)
