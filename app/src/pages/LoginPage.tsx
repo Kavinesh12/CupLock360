@@ -3,6 +3,7 @@ import {
   IonButton, IonContent, IonInput, IonInputPasswordToggle, IonItem, IonList, IonNote, IonPage, IonText,
 } from '@ionic/react'
 import { post, tokens, type OtpChallenge, type Tokens } from '../api/client'
+import { devOtp } from '../api/client'
 
 export default function LoginPage({ onLoggedIn }: { onLoggedIn: () => Promise<void> }) {
   const [login, setLogin] = useState('')
@@ -57,6 +58,9 @@ export default function LoginPage({ onLoggedIn }: { onLoggedIn: () => Promise<vo
               <IonButton expand="block" type="submit" className="ion-margin-top" disabled={busy || code.length !== 6}>Verify and sign in</IonButton>
               <IonButton expand="block" fill="clear" disabled={busy} onClick={sendOtp}>Resend OTP</IonButton>
               <IonButton expand="block" fill="clear" color="medium" onClick={() => { setChallenge(null); setError(null) }}>Back</IonButton>
+              {challenge.channel === 'console' && (
+                <IonButton expand="block" fill="outline" color="warning" onClick={async () => setCode((await devOtp()) ?? '')}>Fill OTP (test mode)</IonButton>
+              )}
             </form>
           )}
         </div>
