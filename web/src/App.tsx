@@ -11,6 +11,7 @@ import AuditPage from './pages/AuditPage'
 import ComingSoon from './pages/ComingSoon'
 import ClientsPage from './pages/ClientsPage'
 import ClientDetailPage from './pages/ClientDetailPage'
+import StockPage from './pages/StockPage'
 import ItemsPage from './pages/ItemsPage'
 import LeadsPage from './pages/LeadsPage'
 import { MENU } from './components/menu'
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="clients" element={<Guard perm="clients.view"><ClientsPage /></Guard>} />
         <Route path="clients/:id" element={<Guard perm="clients.view"><ClientDetailPage /></Guard>} />
         <Route path="items" element={<Guard perm="items.view"><ItemsPage /></Guard>} />
+        <Route path="stock" element={<Guard perm="stock.view"><StockPage /></Guard>} />
         <Route path="leads" element={<Guard perm="leads.view"><LeadsPage /></Guard>} />
         <Route path="audit" element={<Guard perm="audit.view"><AuditPage /></Guard>} />
         {MENU.filter((m) => m.day).map((m) => (

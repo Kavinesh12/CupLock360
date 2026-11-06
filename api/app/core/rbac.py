@@ -23,7 +23,8 @@ PERMISSIONS: dict[str, tuple[str, str]] = {
     "leads.view_all": ("crm", "See every lead in scope, not only own or assigned leads"),
     "clients.credit": ("masters", "Set credit limit, deposit, payment terms and credit status"),
     "stock.view": ("stock", "View stock by warehouse and site"),
-    "stock.move": ("stock", "Post stock movements, transfers and stock checks"),
+    "stock.move": ("stock", "Post stock movements, transfers and status changes"),
+    "stock.adjust": ("stock", "Opening stock, stock-check variances and write-offs"),
     "requests.view": ("operations", "View material requests"),
     "requests.create": ("operations", "Raise material requests"),
     "requests.approve": ("operations", "Approve material requests (within value limit)"),
@@ -53,7 +54,8 @@ ROLES: dict[str, tuple[str, str, set[str]]] = {
         "Branch Manager",
         "Runs one or more branches (scoped)",
         _MASTERS_VIEW
-        | {"clients.manage", "leads.view", "leads.manage", "leads.view_all", "stock.view", "requests.view",
+        | {"clients.manage", "leads.view", "leads.manage", "leads.view_all", "stock.view", "stock.adjust",
+           "requests.view",
            "requests.create", "requests.approve", "billing.view", "reports.view"},
     ),
     "sales": (

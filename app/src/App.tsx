@@ -15,6 +15,7 @@ import HomePage from './pages/HomePage'
 import LeadsPage from './pages/LeadsPage'
 import LeadNewPage from './pages/LeadNewPage'
 import LeadDetailPage from './pages/LeadDetailPage'
+import StockPage from './pages/StockPage'
 
 setupIonicReact({ mode: 'md' })
 
@@ -46,6 +47,7 @@ export default function App() {
           <Route exact path="/leads"><LeadsPage me={me} /></Route>
           <Route exact path="/leads/new"><LeadNewPage /></Route>
           <Route exact path="/leads/:id(\d+)"><LeadDetailPage me={me} /></Route>
+          <Route exact path="/stock"><StockPage /></Route>
           <Route exact path="/"><Redirect to="/home" /></Route>
         </IonRouterOutlet>
       </IonReactRouter>

@@ -20,7 +20,7 @@ export const MENU: MenuEntry[] = [
   { key: '/leads', label: 'Leads', icon: <AimOutlined />, perm: 'leads.view', group: 'main' },
   { key: '/clients', label: 'Clients & sites', icon: <ShopOutlined />, perm: 'clients.view', group: 'main' },
   { key: '/items', label: 'Items & rates', icon: <AppstoreOutlined />, perm: 'items.view', group: 'main' },
-  { key: '/stock', label: 'Stock', icon: <InboxOutlined />, perm: 'stock.view', group: 'main', day: 3 },
+  { key: '/stock', label: 'Stock', icon: <InboxOutlined />, perm: 'stock.view', group: 'main' },
   { key: '/requests', label: 'Requests & dispatch', icon: <SendOutlined />, perm: 'requests.view', group: 'main', day: 4 },
   { key: '/billing', label: 'Billing & dues', icon: <DollarOutlined />, perm: 'billing.view', group: 'main', day: 5 },
   { key: '/reports', label: 'Reports', icon: <BarChartOutlined />, perm: 'reports.view', group: 'main', day: 6 },
